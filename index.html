@@ -1,1 +1,856 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Reptilian</title>
+    <!-- Agrega meta viewport para móviles -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            background: #e8f5e9;
+            /* Elimina centrado y flex del body */
+            width: 100vw;
+            min-height: 100vh;
+            box-sizing: border-box;
+        }
+        body {
+            /* Elimina flex y centrado */
+            width: 100vw;
+            min-height: 100vh;
 
+            /* Haz la animación de fade-in más rápida */
+            opacity: 0;
+            transition: opacity 1.5s cubic-bezier(.77,0,.18,1);
+        }
+        body.fade-in {
+            opacity: 1;
+        }
+        .arbol-chan-container {
+            /* Haz que ocupe toda la pantalla y se fije */
+            position: fixed;
+            top: 0; left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: url('Fondo texto.jpg') no-repeat center center;
+            background-size: cover;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            box-shadow: none;
+            border-radius: 0;
+            overflow: auto;
+            /* Elimina max/min width/height */
+        }
+        .arbol-chan-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 92vw;
+            max-width: 400px;
+            margin: 0 auto;
+            padding: 2.5vh 0 2.5vh 0;
+            /* Quitar fondo, borde y sombra */
+            background: none;
+            border-radius: 0;
+            box-shadow: none;
+        }
+        /* Imagen baja desde arriba */
+        .arbol-chan-img {
+            width: 44vw;
+            max-width: 180px;
+            min-width: 90px;
+            margin-top: 0.5rem;
+            margin-bottom: 0.5rem;
+            opacity: 0;
+            transition: opacity 1.2s, transform 1.2s cubic-bezier(.77,0,.18,1);
+            transform: translateY(-120px);
+        }
+        .arbol-chan-img.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .arbol-chan-titulo {
+            font-family: 'Montserrat', Arial, sans-serif;
+            color: #178a2c;
+            font-size: 2rem;
+            font-weight: bold;
+            margin-top: 0.7rem;
+            margin-bottom: 0.5rem;
+            text-align: center;
+            text-shadow: 0 2px 12px #fff, 0 0 12px #178a2c, 2px 2px 0 #fff;
+        }
+        .arbol-chan-texto {
+            color: #fff;
+            font-family: 'Roboto', Arial, sans-serif;
+            font-size: 1.05rem;
+            margin-top: 0.3rem;
+            margin-bottom: 1rem;
+            text-align: center;
+            text-shadow: 0 2px 8px #000;
+        }
+        .btn-continuar {
+            margin-top: 0.3rem;
+            font-size: 1.1rem;
+            background: #178a2c;
+            color: #fff;
+            border: 2px solid #fff;
+            border-radius: 8px;
+            padding: 0.6rem 2rem;
+            font-weight: bold;
+            font-family: 'Montserrat', Arial, sans-serif;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+            cursor: pointer;
+            transition: background 0.2s, border 0.2s;
+        }
+        .btn-continuar:active {
+            background: #176d13;
+            border: 2px solid #ffe44d;
+        }
+        /* Pong styles (copiados tal cual del flujo original) */
+        #pong-container {
+            /* Centrado absoluto vertical y horizontal */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: url('fonde mesa.jpg') no-repeat center center, linear-gradient(180deg, #e8f5e9 0%, #178a2c 100%);
+            background-size: cover;
+            /* Elimina cualquier margen/padding extra */
+            margin: 0;
+            padding: 0;
+        }
+        #progress-bar-container {
+            width: 80%;
+            max-width: 300px;
+            height: 26px;
+            background: #e0e0e0;
+            border-radius: 13px;
+            margin: 0 0 18px 0;
+            position: relative;
+            box-shadow: 0 2px 8px #178a2c22;
+            border: 2px solid #178a2c;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0;
+        }
+        #progress-bar-flex {
+            flex: 1 1 auto;
+            height: 100%;
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+        #progress-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #ffe44d 60%, #fff176 100%);
+            border-radius: 13px 0 0 13px;
+            width: 0%;
+            transition: width 0.3s cubic-bezier(.77,0,.18,1);
+            box-shadow: 0 0 8px #ffe44d99;
+            position: absolute;
+            left: 0;
+            top: 0;
+            z-index: 1;
+        }
+        #game-rect {
+            background: #fff;
+            border: 5px solid #178a2c;
+            border-radius: 18px;
+            box-shadow: 0 0 32px 4px #178a2c33, 0 0 0 4px #178a2c;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 92vw;
+            max-width: 370px;
+            height: 70vh;
+            max-height: 620px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 2;
+        }
+        #pong-canvas {
+            background: transparent;
+            display: block;
+            width: 100%;
+            height: 100%;
+            border-radius: 12px;
+            box-shadow: none;
+        }
+        #pong-end {
+            position: absolute;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background: url('Fondo texto.jpg') no-repeat center center;
+            background-size: cover;
+            color: #178a2c;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+            font-family: 'Montserrat', Arial, sans-serif;
+        }
+        #pong-end .arbol-img {
+            width: 38vw;
+            max-width: 180px;
+            min-width: 90px;
+            margin-top: 2.5rem;
+            margin-bottom: 1.2rem;
+            filter: drop-shadow(0 4px 16px #fff);
+        }
+        #pong-end h2 {
+            font-size: 2.2rem;
+            margin-bottom: 2rem;
+            color: #178a2c;
+            text-align: center;
+            text-shadow: 0 2px 12px #fff, 0 0 12px #178a2c, 2px 2px 0 #fff;
+            margin-top: 0;
+        }
+        #pong-next-img {
+            width: 60vw;
+            max-width: 300px;
+            min-width: 120px;
+            height: 180px;
+            background: #fff;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 2px 12px #178a2c33;
+        }
+        #pong-end button {
+            font-size: 1.3rem;
+            background: #178a2c;
+            color: #fff;
+            border: 2px solid #fff;
+            border-radius: 8px;
+            padding: 0.7rem 2.5rem;
+            font-weight: bold;
+            font-family: 'Montserrat', Arial, sans-serif;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+            cursor: pointer;
+            margin-top: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        #pong-end button:active {
+            background: #176d13;
+            border: 2px solid #ffe44d;
+        }
+    </style>
+</head>
+<body>
+    <div class="arbol-chan-container" id="arbol-chan-container">
+        <div class="arbol-chan-content">
+            <img src="parrishiguana.png" class="arbol-chan-img" id="arbol-chan-img" alt="Tree-chan" />
+            <div class="arbol-chan-titulo" id="arbol-chan-titulo">Reptilian</div>
+            <div class="arbol-chan-texto" id="arbol-chan-texto">
+                Mango? MANGO!
+            </div>
+            <button class="btn-continuar" id="btn-continuar">Continue</button>
+        </div>
+    </div>
+    <script>
+        // Animación de entrada de Don Árbol
+        const arbolChanImg = document.getElementById('arbol-chan-img');
+        setTimeout(() => {
+            arbolChanImg.classList.add('visible');
+        }, 800);
+
+        // Elimina los fade-in para título, texto y botón
+        /*
+        setTimeout(() => {
+            document.getElementById('arbol-chan-titulo').classList.add('visible');
+        }, 1100);
+        setTimeout(() => {
+            document.getElementById('arbol-chan-texto').classList.add('visible');
+        }, 1300);
+        setTimeout(() => {
+            document.getElementById('btn-continuar').classList.add('visible');
+        }, 1500);
+        */
+
+        // Agrega la clase fade-in al cargar la página para el efecto lento
+        window.addEventListener('DOMContentLoaded', function() {
+            document.body.classList.add('fade-in');
+        });
+
+        // Secuencia de diálogo y juego de ping pong
+        let arbolChanDialogStep = 0;
+        const arbolChanTexto = document.getElementById('arbol-chan-texto');
+        const btnContinuar = document.getElementById('btn-continuar');
+        btnContinuar.addEventListener('click', function() {
+            if (arbolChanDialogStep === 0) {
+                arbolChanTexto.innerHTML = "Those mangoes belong to the Iguanosos Gang, give them to us if you want the next clue... and to get out of here alive";
+                arbolChanDialogStep = 1;
+            } else {
+                // Reemplaza el juego de ping pong por el juego del círculo defensor
+                document.body.innerHTML = `
+<style>
+    /* ... pong styles already included above ... */
+    #progress-bar-container {
+        width: 80%;
+        max-width: 300px;
+        height: 26px;
+        background: #e0e0e0;
+        border-radius: 13px;
+        margin: 0 0 18px 0;
+        position: relative;
+        box-shadow: 0 2px 8px #178a2c22;
+        border: 2px solid #178a2c;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0;
+    }
+    #progress-bar-flex {
+        flex: 1 1 auto;
+        height: 100%;
+        position: relative;
+        display: flex;
+        align-items: center;
+    }
+    #progress-bar-fill {
+        height: 100%;
+        background: linear-gradient(90deg, #ffe44d 60%, #fff176 100%);
+        border-radius: 13px 0 0 13px;
+        width: 0%;
+        transition: width 0.3s cubic-bezier(.77,0,.18,1);
+        box-shadow: 0 0 8px #ffe44d99;
+        position: absolute;
+        left: 0;
+        top: 0;
+        z-index: 1;
+    }
+    #game-rect {
+        background: #fff;
+        border: 5px solid #178a2c;
+        border-radius: 18px;
+        box-shadow: 0 0 32px 4px #178a2c33, 0 0 0 4px #178a2c;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 92vw;
+        max-width: 370px;
+        height: 70vh;
+        max-height: 620px;
+        margin: 0 auto;
+        position: relative;
+        z-index: 2;
+    }
+    #pong-canvas {
+        background: transparent;
+        display: block;
+        width: 100%;
+        height: 100%;
+        border-radius: 12px;
+        box-shadow: none;
+    }
+</style>
+<div id="pong-container">
+    <div id="progress-bar-container">
+        <div id="progress-bar-flex">
+            <div id="progress-bar-fill"></div>
+        </div>
+    </div>
+    <div id="game-rect">
+      <canvas id="gameCanvas"></canvas>
+    </div>
+</div>
+<div id="ost-text" style="position:fixed;bottom:18px;left:0;width:100vw;text-align:center;z-index:20;font-family:'Montserrat',Arial,sans-serif;font-size:1.05rem;color:#fff;text-shadow:0 2px 8px #000;">
+    OST:  E1M1 At Doom's Gate - DOOM
+</div>
+<audio id="pong-audio" src="iguana time.mp3" loop></audio>
+`;
+                setTimeout(() => {
+                    // --- Defender circle game ---
+                    const gameRect = document.getElementById('game-rect');
+                    const canvas = document.getElementById('gameCanvas');
+                    const ctx = canvas.getContext('2d');
+                    // Ajusta el tamaño del canvas al del rectángulo verde
+                    function resizeCanvas() {
+                        canvas.width = gameRect.clientWidth;
+                        canvas.height = gameRect.clientHeight;
+                    }
+                    resizeCanvas();
+                    window.addEventListener('resize', resizeCanvas);
+                    const centerX = () => canvas.width / 2;
+                    const centerY = () => canvas.height / 2;
+                    const bullets = [];
+                    const enemies = [];
+                    let gameOver = false;
+                    let playerWon = false;
+                    let score = 0;
+                    let winScore = 0;
+                    // --- Oleadas de enemigos ---
+                    // Ajuste: 40% más fáciles (reducción adicional para que el jugador pueda ganar más fácil)
+                    const waves = [
+                        { yellow: Math.round(36 * 0.8 * 0.8 * 0.7), red: Math.round(24 * 0.8 * 0.8 * 0.7), purple: Math.round(12 * 0.8 * 0.8 * 0.7), interval: 400 }, // Oleada 1
+                        { yellow: Math.round(24 * 0.8 * 0.8 * 0.7), red: Math.round(48 * 0.8 * 0.7), purple: Math.round(24 * 0.8 * 0.8 * 0.7), interval: 300 }, // Oleada 2
+                        { yellow: Math.round(12 * 0.8 * 0.8 * 0.7), red: Math.round(60 * 0.8 * 0.8 * 0.7), purple: Math.round(36 * 0.8 * 0.8 * 0.7), interval: 200 }, // Oleada 3
+                        { yellow: 0, red: Math.round(80 * 0.8 * 0.8 * 0.7), purple: Math.round(60 * 0.8 * 0.8 * 0.7), interval: 120 } // Oleada 4
+                    ];
+                    let currentWave = 0;
+                    let enemiesToSpawn = [];
+                    let totalEnemies = 0;
+                    for (const w of waves) winScore += w.yellow + w.red + w.purple;
+
+                    // Calcular los puntos de inicio de cada oleada para la barra de progreso
+                    const waveStartPoints = [];
+                    let acc = 0;
+                    for (const w of waves) {
+                        waveStartPoints.push(acc);
+                        acc += w.yellow + w.red + w.purple;
+                    }
+
+                    function prepareWave(waveIndex) {
+                        const wave = waves[waveIndex];
+                        enemiesToSpawn = [];
+                        for (let i = 0; i < wave.yellow; i++) enemiesToSpawn.push('yellow');
+                        for (let i = 0; i < wave.red; i++) enemiesToSpawn.push('red');
+                        for (let i = 0; i < wave.purple; i++) enemiesToSpawn.push('purple');
+                        // Mezclar el array para aleatoriedad
+                        for (let i = enemiesToSpawn.length - 1; i > 0; i--) {
+                            const j = Math.floor(Math.random() * (i + 1));
+                            [enemiesToSpawn[i], enemiesToSpawn[j]] = [enemiesToSpawn[j], enemiesToSpawn[i]];
+                        }
+                    }
+
+                    function spawnEnemy() {
+                        if (gameOver) return;
+                        if (enemiesToSpawn.length === 0) return;
+                        const type = enemiesToSpawn.shift();
+                        const baseSize = 30;
+                        const size = Math.round(baseSize * 2);
+                        // Enemigos salen de cualquier punto de los bordes
+                        const wall = Math.floor(Math.random() * 4); // 0: top, 1: right, 2: bottom, 3: left
+                        let x, y;
+                        if (wall === 0) { // top
+                            x = Math.random() * (canvas.width - size);
+                            y = 0;
+                        } else if (wall === 1) { // right
+                            x = canvas.width - size;
+                            y = Math.random() * (canvas.height - size);
+                        } else if (wall === 2) { // bottom
+                            x = Math.random() * (canvas.width - size);
+                            y = canvas.height - size;
+                        } else { // left
+                            x = 0;
+                            y = Math.random() * (canvas.height - size);
+                        }
+                        const cx = centerX();
+                        const cy = centerY();
+                        const angle = Math.atan2(cy - (y + size/2), cx - (x + size/2));
+                        let speed = 1.5;
+                        let color = "yellow";
+                        if (type === 'red') {
+                            speed *= 1.35;
+                            color = "red";
+                        } else if (type === 'purple') {
+                            speed *= 1.6;
+                            color = "purple";
+                        }
+                        enemies.push({
+                            x,
+                            y,
+                            size,
+                            speed,
+                            dx: Math.cos(angle),
+                            dy: Math.sin(angle),
+                            hit: false,
+                            color,
+                            baseSpeed: 1.5
+                        });
+                    }
+
+                    function nextWave() {
+                        currentWave++;
+                        if (currentWave < waves.length) {
+                            prepareWave(currentWave);
+                            const interval = waves[currentWave].interval;
+                            spawnWaveInterval = setInterval(() => {
+                                if (enemiesToSpawn.length > 0) {
+                                    spawnEnemy();
+                                } else {
+                                    clearInterval(spawnWaveInterval);
+                                }
+                            }, interval);
+                        } else {
+                            // Todas las oleadas completadas, el jugador gana
+                            setTimeout(() => showEndScreen(true), 600);
+                        }
+                    }
+                    let spawnWaveInterval;
+
+                    function drawPlayer() {
+                        // Draw the mango image in the center
+                        const mangoImg = new Image();
+                        mangoImg.src = "mango.png";
+                        const size = 40; // mango size
+                        mangoImg.onload = function() {
+                            ctx.drawImage(mangoImg, centerX() - size/2, centerY() - size/2, size, size);
+                        };
+                        // Si ya está cargada, dibuja de inmediato
+                        if (mangoImg.complete) {
+                            ctx.drawImage(mangoImg, centerX() - size/2, centerY() - size/2, size, size);
+                        }
+                    }
+                    function shootBullet(x, y) {
+                        const rect = canvas.getBoundingClientRect();
+                        const cx = centerX();
+                        const cy = centerY();
+                        // Ajusta coordenadas al canvas
+                        const mouseX = x - rect.left;
+                        const mouseY = y - rect.top;
+                        const angle = Math.atan2(mouseY - cy, mouseX - cx);
+                        bullets.push({
+                            x: cx,
+                            y: cy,
+                            radius: 12,
+                            speed: 8,
+                            dx: Math.cos(angle),
+                            dy: Math.sin(angle),
+                            img: "mango.png"
+                        });
+                        // Reproducir sonido de disparo
+                        const mangAudio = new Audio("mang.mp3");
+                        mangAudio.play().catch(()=>{});
+                    }
+                    function getEnemyType() {
+                        const rand = Math.random();
+                        if (rand < 0.25) return 'purple';
+                        if (rand < 0.25 + 0.40) return 'red';
+                        return 'yellow';
+                    }
+                    function spawnEnemy() {
+                        if (gameOver) return;
+                        if (enemiesToSpawn.length === 0) return;
+                        const type = enemiesToSpawn.shift();
+                        const baseSize = 30;
+                        const size = Math.round(baseSize * 2);
+                        // Enemigos salen de cualquier punto de los bordes
+                        const wall = Math.floor(Math.random() * 4); // 0: top, 1: right, 2: bottom, 3: left
+                        let x, y;
+                        if (wall === 0) { // top
+                            x = Math.random() * (canvas.width - size);
+                            y = 0;
+                        } else if (wall === 1) { // right
+                            x = canvas.width - size;
+                            y = Math.random() * (canvas.height - size);
+                        } else if (wall === 2) { // bottom
+                            x = Math.random() * (canvas.width - size);
+                            y = canvas.height - size;
+                        } else { // left
+                            x = 0;
+                            y = Math.random() * (canvas.height - size);
+                        }
+                        const cx = centerX();
+                        const cy = centerY();
+                        const angle = Math.atan2(cy - (y + size/2), cx - (x + size/2));
+                        let speed = 1.5;
+                        let color = "yellow";
+                        if (type === 'red') {
+                            speed *= 1.35;
+                            color = "red";
+                        } else if (type === 'purple') {
+                            speed *= 1.6;
+                            color = "purple";
+                        }
+                        enemies.push({
+                            x,
+                            y,
+                            size,
+                            speed,
+                            dx: Math.cos(angle),
+                            dy: Math.sin(angle),
+                            hit: false,
+                            color,
+                            baseSpeed: 1.5 // velocidad base del amarillo
+                        });
+                    }
+
+                    function showEndScreen(playerWon) {
+                        const pongContainer = document.getElementById('pong-container');
+                        // Stop music at game end
+                        const audio = document.getElementById('pong-audio');
+                        if (audio) {
+                            audio.pause();
+                            audio.currentTime = 0;
+                        }
+                        let html = '';
+                        if (playerWon) {
+                            html = `
+                                <div class=\"arbol-chan-container\" id=\"pong-end\" style=\"position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:10;background:url('Fondo texto.jpg') no-repeat center center;background-size:cover;display:flex;flex-direction:column;justify-content:center;align-items:center;\">
+                                    <div class=\"arbol-chan-content\" style=\"background:none;box-shadow:none;\">
+                                        <img src=\"parrishiguana.png\" class=\"arbol-chan-img\" alt=\"Don Árbol\" style=\"opacity:1;transform:none;margin-bottom:0.7rem;\" />
+                                        <div class=\"arbol-chan-titulo\" style=\"color:#178a2c;margin-bottom:0.7rem;\">Reptilian</div>
+                                        <div class=\"arbol-chan-texto\" style=\"color:#fff;\">
+                                            Jummy Jummy
+                                        </div>
+                                        <button id=\"pong-show-clue\" class=\"btn-continuar\" style=\"margin-top:1.2rem;\">See clue</button>
+                                    </div>
+                                </div>
+                            `;
+                            pongContainer.insertAdjacentHTML('beforeend', html);
+                            document.getElementById('pong-show-clue').onclick = function() {
+                                document.getElementById('pong-end').innerHTML = `
+                                    <h2 style=\"margin-top:0;\">Next clue</h2>
+                                    <div id=\"pong-next-img\" style=\"margin:0; padding:0; display:flex; align-items:center; justify-content:center; width:60vw; max-width:300px; min-width:120px; height:180px; background:#fff; border-radius:12px; overflow:hidden; box-shadow:0 2px 12px #178a2c33;\">
+                                        <img src=\"Silla2.jpeg\" alt=\"Clue\" style=\"width:100%;height:100%;object-fit:cover;display:block;border-radius:12px;\">
+                                    </div>
+                                    <button id=\"pong-continue\" style=\"font-size:1.3rem;background:#178a2c;color:#fff;border:2px solid #fff;border-radius:8px;padding:0.7rem 2.5rem;font-weight:bold;font-family:'Montserrat',Arial,sans-serif;box-shadow:0 2px 8px rgba(0,0,0,0.12);cursor:pointer;margin-top:1.5rem;margin-bottom:2rem;\">Continue</button>
+                                `;
+                                document.getElementById('pong-continue').onclick = function() {
+                                    window.location.href = "https://danjua77.github.io/Sagrado.Puzzle/";
+                                };
+                            };
+                        } else {
+                            html = `
+                                <div id=\"pong-end\">
+                                    <img src=\"pe.png\" class=\"arbol-img\" alt=\"You lost\" />
+                                    <button id=\"pong-retry\">Continue</button>
+                                </div>
+                            `;
+                            pongContainer.insertAdjacentHTML('beforeend', html);
+                            document.getElementById('pong-retry').onclick = function() {
+                                location.reload();
+                            };
+                        }
+                    }
+                    let gameStarted = false;
+                    let countdown = 3;
+                    function drawCountdown() {
+                        ctx.save();
+                        ctx.clearRect(0, 0, canvas.width, canvas.height);
+                        // Dibuja primero el número de cuenta regresiva, un poco más arriba del mango
+                        ctx.font = `bold 3.5rem Montserrat, Arial, sans-serif`;
+                        ctx.textAlign = "center";
+                        ctx.fillStyle = "#ffe44d";
+                        ctx.shadowColor = "#178a2c";
+                        ctx.shadowBlur = 8;
+                        if (countdown > 0) {
+                            ctx.fillText(countdown, canvas.width/2, canvas.height/2 - 40);
+                        }
+                        ctx.shadowBlur = 0;
+                        ctx.restore();
+                        // Luego dibuja la imagen del mango debajo del número
+                        drawPlayer();
+                    }
+                    // Inicia el contador
+                    function countdownLoop() {
+                        drawCountdown();
+                        if (countdown > 0) {
+                            countdown--;
+                            setTimeout(countdownLoop, 1000);
+                        } else {
+                            setTimeout(() => {
+                                gameStarted = true;
+                                prepareWave(0);
+                                const interval = waves[0].interval;
+                                spawnWaveInterval = setInterval(() => {
+                                    if (enemiesToSpawn.length > 0) {
+                                        spawnEnemy();
+                                    } else {
+                                        clearInterval(spawnWaveInterval);
+                                    }
+                                }, interval);
+                                updateGame();
+                            }, 1000);
+                        }
+                    }
+                    countdownLoop();
+                    function updateProgressBar() {
+                        const fill = document.getElementById('progress-bar-fill');
+                        if (fill) {
+                            const percent = Math.min(score / winScore, 1) * 100;
+                            fill.style.width = percent + '%';
+                        }
+                        // Marcar los puntos de inicio de cada oleada
+                        let markers = document.getElementById('progress-bar-markers');
+                        if (!markers) {
+                            markers = document.createElement('div');
+                            markers.id = 'progress-bar-markers';
+                            markers.style.position = 'absolute';
+                            markers.style.left = '0';
+                            markers.style.top = '0';
+                            markers.style.width = '100%';
+                            markers.style.height = '100%';
+                            markers.style.pointerEvents = 'none';
+                            markers.style.zIndex = '2';
+                            fill.parentElement.appendChild(markers);
+                        }
+                        markers.innerHTML = '';
+                        for (let i = 0; i < waveStartPoints.length; i++) {
+                            const percent = (waveStartPoints[i] / winScore) * 100;
+                            const marker = document.createElement('div');
+                            marker.style.position = 'absolute';
+                            marker.style.top = '50%';
+                            marker.style.transform = 'translateY(-50%)';
+                            marker.style.zIndex = '3';
+                            marker.style.background = 'none';
+                            marker.style.border = 'none';
+                            marker.style.boxShadow = 'none';
+                            marker.style.width = '18px';
+                            marker.style.height = '18px';
+                            if (i === 0) {
+                                marker.style.left = '0px';
+                                marker.innerHTML = '<img src="iganaf.png" style="width:100%;height:100%;display:block;">';
+                            } else if (i === waveStartPoints.length - 1) {
+                                marker.style.right = '0px';
+                                marker.innerHTML = '';
+                            } else if (i === 2) {
+                                // Oleada 3 usa iga.png
+                                let leftPercent = percent;
+                                if (leftPercent < 6) leftPercent = 6;
+                                if (leftPercent > 94) leftPercent = 94;
+                                marker.style.left = `calc(${leftPercent}% - 9px)`;
+                                marker.innerHTML = '<img src="iga.png" style="width:100%;height:100%;display:block;">';
+                            } else {
+                                let leftPercent = percent;
+                                if (leftPercent < 6) leftPercent = 6;
+                                if (leftPercent > 94) leftPercent = 94;
+                                marker.style.left = `calc(${leftPercent}% - 9px)`;
+                                marker.innerHTML = '<img src="iganaf.png" style="width:100%;height:100%;display:block;">';
+                            }
+                            markers.appendChild(marker);
+                        }
+                    }
+                    function updateGame() {
+                        if (gameOver) return;
+                        ctx.clearRect(0, 0, canvas.width, canvas.height);
+                        drawPlayer();
+                        // Eliminada la barra de progreso y score
+                        for (let i = bullets.length - 1; i >= 0; i--) {
+                            const b = bullets[i];
+                            b.x += b.dx * b.speed;
+                            b.y += b.dy * b.speed;
+                            // Dibuja la imagen del mango como bala
+                            const bulletImg = new Image();
+                            bulletImg.src = b.img;
+                            const bulletSize = 24;
+                            bulletImg.onload = function() {
+                                ctx.drawImage(bulletImg, b.x - bulletSize/2, b.y - bulletSize/2, bulletSize, bulletSize);
+                            };
+                            if (bulletImg.complete) {
+                                ctx.drawImage(bulletImg, b.x - bulletSize/2, b.y - bulletSize/2, bulletSize, bulletSize);
+                            }
+                            if (b.x < 0 || b.x > canvas.width || b.y < 0 || b.y > canvas.height) {
+                                bullets.splice(i, 1);
+                            }
+                        }
+                        if (!gameStarted) return; // No dibujar ni mover iguanas hasta que termine el contador
+                        for (let i = enemies.length - 1; i >= 0; i--) {
+                            const e = enemies[i];
+                            if (!e.hit) {
+                                e.x += e.dx * e.speed;
+                                e.y += e.dy * e.speed;
+                            } else {
+                                // Todos retroceden a 15% menos que el amarillo original
+                                const retroSpeed = e.baseSpeed * 0.85;
+                                e.x -= e.dx * retroSpeed;
+                                e.y -= e.dy * retroSpeed;
+                            }
+                            // Selecciona la imagen según el color o si está golpeado
+                            let imgSrc = '';
+                            if (e.hit) {
+                                imgSrc = 'iguana verde.png';
+                            } else if (e.color === 'yellow') {
+                                imgSrc = 'iguana amarilla.png';
+                            } else if (e.color === 'red') {
+                                imgSrc = 'iguana roja.png';
+                            } else if (e.color === 'purple') {
+                                imgSrc = 'iguana morada.png';
+                            }
+                            if (imgSrc) {
+                                const enemyImg = new Image();
+                                enemyImg.src = imgSrc;
+                                const renderSize = Math.round(e.size * 1.0); // asegura 100% más grande
+                                enemyImg.onload = function() {
+                                    ctx.drawImage(enemyImg, e.x, e.y, renderSize, renderSize);
+                                };
+                                if (enemyImg.complete) {
+                                    ctx.drawImage(enemyImg, e.x, e.y, renderSize, renderSize);
+                                }
+                            } else {
+                                ctx.fillStyle = e.hit ? "green" : e.color;
+                                ctx.fillRect(e.x, e.y, e.size, e.size);
+                            }
+                            const dist = Math.hypot(e.x + e.size/2 - centerX(), e.y + e.size/2 - centerY());
+                            if (dist < e.size / 2 + 20 && !e.hit) {
+                                gameOver = true;
+                                setTimeout(() => showEndScreen(false), 600);
+                                return;
+                            }
+                            if (e.hit && (e.x < -50 || e.x > canvas.width + 50 || e.y < -50 || e.y > canvas.height + 50)) {
+                                enemies.splice(i, 1);
+                                score++;
+                                updateProgressBar();
+                                totalEnemies++;
+                                if (totalEnemies >= winScore) {
+                                    gameOver = true;
+                                    setTimeout(() => showEndScreen(true), 600);
+                                    return;
+                                }
+                            }
+                            for (let j = bullets.length - 1; j >= 0; j--) {
+                                const b = bullets[j];
+                                if (!e.hit &&
+                                    b.x > e.x && b.x < e.x + e.size &&
+                                    b.y > e.y && b.y < e.y + e.size
+                                ) {
+                                    e.hit = true;
+                                    bullets.splice(j, 1);
+                                    break;
+                                }
+                            }
+                        }
+                        // Si no quedan enemigos activos ni por salir, pasa a la siguiente oleada
+                        if (enemies.length === 0 && enemiesToSpawn.length === 0 && !gameOver && currentWave < waves.length - 1) {
+                            nextWave();
+                        }
+                        requestAnimationFrame(updateGame);
+                    }
+                    // Eventos de disparo solo cuando gameStarted es true
+                    let lastTouchTime = 0;
+                    canvas.addEventListener('touchstart', e => {
+                        if (!gameStarted) return;
+                        const now = Date.now();
+                        if (now - lastTouchTime < 200) return; // Evita múltiples disparos rápidos
+                        lastTouchTime = now;
+                        const touch = e.touches[0];
+                        shootBullet(touch.clientX, touch.clientY);
+                    });
+                    canvas.addEventListener('mousedown', e => {
+                        if (!gameStarted) return;
+                        shootBullet(e.clientX, e.clientY);
+                    });
+                    // Inicia la música
+                    const audio = document.getElementById('pong-audio');
+                    if (audio) {
+                        audio.currentTime = 0;
+                        audio.play().catch(()=>{});
+                        audio.addEventListener('ended', function() {
+                            audio.currentTime = 0;
+                            audio.play().catch(()=>{});
+                        });
+                    }
+                    // No llamar updateGame() aquí, lo hace el contador
+                }, 10);
+            }
+        });
+    </script>
+</body>
+</html>

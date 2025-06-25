@@ -619,11 +619,7 @@
                             };
                         } else {
                             html = `
-                                <div id=\"pong-end\">
-                                    <img src=\"ps.png\" class=\"arbol-img\" alt=\"You lost\" />
-                                    <button id=\"pong-retry\">Continue</button>
-                                </div>
-                            `;
+                                <div id=\"pong-end\">\n                                    <img src=\"pe.png\" class=\"arbol-img\" alt=\"You lost\" />\n                                    <button id=\"pong-retry\">Continue</button>\n                                </div>\n                            `;
                             pongContainer.insertAdjacentHTML('beforeend', html);
                             document.getElementById('pong-retry').onclick = function() {
                                 location.reload();

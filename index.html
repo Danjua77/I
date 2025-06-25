@@ -293,7 +293,7 @@
         const btnContinuar = document.getElementById('btn-continuar');
         btnContinuar.addEventListener('click', function() {
             if (arbolChanDialogStep === 0) {
-                arbolChanTexto.innerHTML = "Those mangoes belong to the Iguanosos Gang, give them to us if you want the next clue... and to get out of here alive";
+                arbolChanTexto.innerHTML = "Those mangoes belong to the iguana gang, give them to us if you want the next clue... and to get out of here alive";
                 arbolChanDialogStep = 1;
             } else {
                 // Reemplaza el juego de ping pong por el juego del círculo defensor
@@ -376,7 +376,7 @@
 <audio id="pong-audio" src="iguana time.mp3" loop></audio>
 `;
                 setTimeout(() => {
-                    // --- Defender circle game ---
+                    // --- Juego del círculo defensor ---
                     const gameRect = document.getElementById('game-rect');
                     const canvas = document.getElementById('gameCanvas');
                     const ctx = canvas.getContext('2d');
@@ -496,10 +496,10 @@
                     let spawnWaveInterval;
 
                     function drawPlayer() {
-                        // Draw the mango image in the center
+                        // Dibuja la imagen del mango en el centro
                         const mangoImg = new Image();
                         mangoImg.src = "mango.png";
-                        const size = 40; // mango size
+                        const size = 40; // tamaño del mango
                         mangoImg.onload = function() {
                             ctx.drawImage(mangoImg, centerX() - size/2, centerY() - size/2, size, size);
                         };
@@ -584,7 +584,7 @@
 
                     function showEndScreen(playerWon) {
                         const pongContainer = document.getElementById('pong-container');
-                        // Stop music at game end
+                        // Detener la música al finalizar el juego
                         const audio = document.getElementById('pong-audio');
                         if (audio) {
                             audio.pause();
@@ -600,7 +600,7 @@
                                         <div class=\"arbol-chan-texto\" style=\"color:#fff;\">
                                             Jummy Jummy
                                         </div>
-                                        <button id=\"pong-show-clue\" class=\"btn-continuar\" style=\"margin-top:1.2rem;\">See clue</button>
+                                        <button id=\"pong-show-clue\" class=\"btn-continuar\" style=\"margin-top:1.2rem;\">Show clue</button>
                                     </div>
                                 </div>
                             `;
@@ -620,7 +620,7 @@
                         } else {
                             html = `
                                 <div id=\"pong-end\">
-                                    <img src=\"pe.png\" class=\"arbol-img\" alt=\"You lost\" />
+                                    <img src=\"ps.png\" class=\"arbol-img\" alt=\"You lost\" />
                                     <button id=\"pong-retry\">Continue</button>
                                 </div>
                             `;

@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <title>Reptilian</title>
-    <!-- Add meta viewport for mobile -->
+    <!-- Agrega meta viewport para móviles -->
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <style>
@@ -12,17 +12,17 @@
             margin: 0;
             padding: 0;
             background: #e8f5e9;
-            /* Remove centering and flex from body */
+            /* Elimina centrado y flex del body */
             width: 100vw;
             min-height: 100vh;
             box-sizing: border-box;
         }
         body {
-            /* Remove flex and centering */
+            /* Elimina flex y centrado */
             width: 100vw;
             min-height: 100vh;
 
-            /* Make the fade-in animation faster */
+            /* Haz la animación de fade-in más rápida */
             opacity: 0;
             transition: opacity 1.5s cubic-bezier(.77,0,.18,1);
         }
@@ -30,7 +30,7 @@
             opacity: 1;
         }
         .arbol-chan-container {
-            /* Make it occupy the whole screen and fix it */
+            /* Haz que ocupe toda la pantalla y se fije */
             position: fixed;
             top: 0; left: 0;
             width: 100vw;
@@ -44,7 +44,7 @@
             box-shadow: none;
             border-radius: 0;
             overflow: auto;
-            /* Remove max/min width/height */
+            /* Elimina max/min width/height */
         }
         .arbol-chan-content {
             display: flex;
@@ -55,12 +55,12 @@
             max-width: 400px;
             margin: 0 auto;
             padding: 2.5vh 0 2.5vh 0;
-            /* Remove background, border, and shadow */
+            /* Quitar fondo, borde y sombra */
             background: none;
             border-radius: 0;
             box-shadow: none;
         }
-        /* Image slides down from the top */
+        /* Imagen baja desde arriba */
         .arbol-chan-img {
             width: 44vw;
             max-width: 180px;
@@ -112,9 +112,9 @@
             background: #176d13;
             border: 2px solid #ffe44d;
         }
-        /* Pong styles (copied as is from the original flow) */
+        /* Pong styles (copiados tal cual del flujo original) */
         #pong-container {
-            /* Absolute centering vertical and horizontal */
+            /* Centrado absoluto vertical y horizontal */
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -125,7 +125,7 @@
             height: 100vh;
             background: url('fonde mesa.jpg') no-repeat center center, linear-gradient(180deg, #e8f5e9 0%, #178a2c 100%);
             background-size: cover;
-            /* Remove any extra margin/padding */
+            /* Elimina cualquier margen/padding extra */
             margin: 0;
             padding: 0;
         }
@@ -257,19 +257,19 @@
             <img src="parrishiguana.png" class="arbol-chan-img" id="arbol-chan-img" alt="Tree-chan" />
             <div class="arbol-chan-titulo" id="arbol-chan-titulo">Reptilian</div>
             <div class="arbol-chan-texto" id="arbol-chan-texto">
-                Mango? MANGO!
+                ¿Mango? ¡MANGO!
             </div>
-            <button class="btn-continuar" id="btn-continuar">Continue</button>
+            <button class="btn-continuar" id="btn-continuar">Continuar</button>
         </div>
     </div>
     <script>
-        // Don Árbol entrance animation
+        // Animación de entrada de Don Árbol
         const arbolChanImg = document.getElementById('arbol-chan-img');
         setTimeout(() => {
             arbolChanImg.classList.add('visible');
         }, 800);
 
-        // Remove fade-in for title, text, and button
+        // Elimina los fade-in para título, texto y botón
         /*
         setTimeout(() => {
             document.getElementById('arbol-chan-titulo').classList.add('visible');
@@ -282,12 +282,12 @@
         }, 1500);
         */
 
-        // Add fade-in class on page load for slow effect
+        // Agrega la clase fade-in al cargar la página para el efecto lento
         window.addEventListener('DOMContentLoaded', function() {
             document.body.classList.add('fade-in');
         });
 
-        // Dialog sequence and defender circle game
+        // Secuencia de diálogo y juego de ping pong
         let arbolChanDialogStep = 0;
         const arbolChanTexto = document.getElementById('arbol-chan-texto');
         const btnContinuar = document.getElementById('btn-continuar');
@@ -296,7 +296,7 @@
                 arbolChanTexto.innerHTML = "Those mangoes belong to the iguana gang, give them to us if you want the next clue... and to get out of here alive";
                 arbolChanDialogStep = 1;
             } else {
-                // Replace the ping pong game with the defender circle game
+                // Replaces the ping pong game with the defender circle game
                 document.body.innerHTML = `
 <style>
     /* ... pong styles already included above ... */
@@ -376,11 +376,11 @@
 <audio id="pong-audio" src="iguana time.mp3" loop></audio>
 `;
                 setTimeout(() => {
-                    // --- Defender circle game ---
+                    // --- Juego del círculo defensor ---
                     const gameRect = document.getElementById('game-rect');
                     const canvas = document.getElementById('gameCanvas');
                     const ctx = canvas.getContext('2d');
-                    // Adjust canvas size to green rectangle
+                    // Ajusta el tamaño del canvas al del rectángulo verde
                     function resizeCanvas() {
                         canvas.width = gameRect.clientWidth;
                         canvas.height = gameRect.clientHeight;
@@ -395,20 +395,20 @@
                     let playerWon = false;
                     let score = 0;
                     let winScore = 0;
-                    // --- Enemy waves ---
-                    // Adjustment: 40% easier (further reduction so player can win more easily)
+                    // --- Oleadas de enemigos ---
+                    // Ajuste: 40% más fáciles (reducción adicional para que el jugador pueda ganar más fácil)
                     const waves = [
-                        { yellow: Math.round(36 * 0.8 * 0.8 * 0.7 * 0.85), red: Math.round(24 * 0.8 * 0.8 * 0.7 * 0.85), purple: Math.round(12 * 0.8 * 0.8 * 0.7 * 0.85), interval: 400 }, // Wave 1
-                        { yellow: Math.round(24 * 0.8 * 0.8 * 0.7 * 0.85), red: Math.round(48 * 0.8 * 0.7 * 0.85), purple: Math.round(24 * 0.8 * 0.8 * 0.7 * 0.85), interval: 300 }, // Wave 2
-                        { yellow: Math.round(12 * 0.8 * 0.8 * 0.7 * 0.85), red: Math.round(60 * 0.8 * 0.8 * 0.7 * 0.85), purple: Math.round(36 * 0.8 * 0.8 * 0.7 * 0.85), interval: 200 }, // Wave 3
-                        { yellow: 0, red: Math.round(80 * 0.8 * 0.8 * 0.7 * 0.85), purple: Math.round(60 * 0.8 * 0.8 * 0.7 * 0.85), interval: 120 } // Wave 4
+                        { yellow: Math.round(36 * 0.8 * 0.8 * 0.7 * 0.85), red: Math.round(24 * 0.8 * 0.8 * 0.7 * 0.85), purple: Math.round(12 * 0.8 * 0.8 * 0.7 * 0.85), interval: 400 }, // Oleada 1
+                        { yellow: Math.round(24 * 0.8 * 0.8 * 0.7 * 0.85), red: Math.round(48 * 0.8 * 0.7 * 0.85), purple: Math.round(24 * 0.8 * 0.8 * 0.7 * 0.85), interval: 300 }, // Oleada 2
+                        { yellow: Math.round(12 * 0.8 * 0.8 * 0.7 * 0.85), red: Math.round(60 * 0.8 * 0.8 * 0.7 * 0.85), purple: Math.round(36 * 0.8 * 0.8 * 0.7 * 0.85), interval: 200 }, // Oleada 3
+                        { yellow: 0, red: Math.round(80 * 0.8 * 0.8 * 0.7 * 0.85), purple: Math.round(60 * 0.8 * 0.8 * 0.7 * 0.85), interval: 120 } // Oleada 4
                     ];
                     let currentWave = 0;
                     let enemiesToSpawn = [];
                     let totalEnemies = 0;
                     for (const w of waves) winScore += w.yellow + w.red + w.purple;
 
-                    // Calculate wave start points for progress bar
+                    // Calcular los puntos de inicio de cada oleada para la barra de progreso
                     const waveStartPoints = [];
                     let acc = 0;
                     for (const w of waves) {
@@ -422,7 +422,7 @@
                         for (let i = 0; i < wave.yellow; i++) enemiesToSpawn.push('yellow');
                         for (let i = 0; i < wave.red; i++) enemiesToSpawn.push('red');
                         for (let i = 0; i < wave.purple; i++) enemiesToSpawn.push('purple');
-                        // Shuffle array for randomness
+                        // Mezclar el array para aleatoriedad
                         for (let i = enemiesToSpawn.length - 1; i > 0; i--) {
                             const j = Math.floor(Math.random() * (i + 1));
                             [enemiesToSpawn[i], enemiesToSpawn[j]] = [enemiesToSpawn[j], enemiesToSpawn[i]];
@@ -435,7 +435,7 @@
                         const type = enemiesToSpawn.shift();
                         const baseSize = 30;
                         const size = Math.round(baseSize * 2);
-                        // Enemies come from any point of the edges
+                        // Enemigos salen de cualquier punto de los bordes
                         const wall = Math.floor(Math.random() * 4); // 0: top, 1: right, 2: bottom, 3: left
                         let x, y;
                         if (wall === 0) { // top
@@ -489,21 +489,21 @@
                                 }
                             }, interval);
                         } else {
-                            // All waves completed, player wins
+                            // Todas las oleadas completadas, el jugador gana
                             setTimeout(() => showEndScreen(true), 600);
                         }
                     }
                     let spawnWaveInterval;
 
                     function drawPlayer() {
-                        // Draw the mango image in the center
+                        // Dibuja la imagen del mango en el centro
                         const mangoImg = new Image();
                         mangoImg.src = "mango.png";
-                        const size = 40; // mango size
+                        const size = 40; // tamaño del mango
                         mangoImg.onload = function() {
                             ctx.drawImage(mangoImg, centerX() - size/2, centerY() - size/2, size, size);
                         };
-                        // If already loaded, draw immediately
+                        // Si ya está cargada, dibuja de inmediato
                         if (mangoImg.complete) {
                             ctx.drawImage(mangoImg, centerX() - size/2, centerY() - size/2, size, size);
                         }
@@ -512,7 +512,7 @@
                         const rect = canvas.getBoundingClientRect();
                         const cx = centerX();
                         const cy = centerY();
-                        // Adjust coordinates to canvas
+                        // Ajusta coordenadas al canvas
                         const mouseX = x - rect.left;
                         const mouseY = y - rect.top;
                         const angle = Math.atan2(mouseY - cy, mouseX - cx);
@@ -525,7 +525,7 @@
                             dy: Math.sin(angle),
                             img: "mango.png"
                         });
-                        // Play shot sound
+                        // Reproducir sonido de disparo
                         const mangAudio = new Audio("mang.mp3");
                         mangAudio.play().catch(()=>{});
                     }
@@ -541,7 +541,7 @@
                         const type = enemiesToSpawn.shift();
                         const baseSize = 30;
                         const size = Math.round(baseSize * 2);
-                        // Enemies come from any point of the edges
+                        // Enemigos salen de cualquier punto de los bordes
                         const wall = Math.floor(Math.random() * 4); // 0: top, 1: right, 2: bottom, 3: left
                         let x, y;
                         if (wall === 0) { // top
@@ -578,13 +578,13 @@
                             dy: Math.sin(angle),
                             hit: false,
                             color,
-                            baseSpeed: 1.5 // yellow's base speed
+                            baseSpeed: 1.5 // velocidad base del amarillo
                         });
                     }
 
                     function showEndScreen(playerWon) {
                         const pongContainer = document.getElementById('pong-container');
-                        // Stop music at game end
+                        // Detener la música al finalizar el juego
                         const audio = document.getElementById('pong-audio');
                         if (audio) {
                             audio.pause();
@@ -592,6 +592,9 @@
                         }
                         let html = '';
                         if (playerWon) {
+                            // Reproducir sonido de victoria
+                            const winAudio = new Audio('ok.mp3');
+                            winAudio.play().catch(()=>{});
                             html = `
                                 <div class=\"arbol-chan-container\" id=\"pong-end\" style=\"position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:10;background:url('Fondo texto.jpg') no-repeat center center;background-size:cover;display:flex;flex-direction:column;justify-content:center;align-items:center;\">
                                     <div class=\"arbol-chan-content\" style=\"background:none;box-shadow:none;\">
@@ -620,7 +623,7 @@
                         } else {
                             html = `
                                 <div id=\"pong-end\">
-                                    <img src=\"ps.png\" class=\"arbol-img\" alt=\"You lost\" />
+                                    <img src=\"pe.png\" class=\"arbol-img\" alt=\"You lost\" />
                                     <button id=\"pong-retry\">Continue</button>
                                 </div>
                             `;
@@ -635,7 +638,7 @@
                     function drawCountdown() {
                         ctx.save();
                         ctx.clearRect(0, 0, canvas.width, canvas.height);
-                        // Draw the countdown number first, a bit above the mango
+                        // Dibuja primero el número de cuenta regresiva, un poco más arriba del mango
                         ctx.font = `bold 3.5rem Montserrat, Arial, sans-serif`;
                         ctx.textAlign = "center";
                         ctx.fillStyle = "#ffe44d";
@@ -646,10 +649,10 @@
                         }
                         ctx.shadowBlur = 0;
                         ctx.restore();
-                        // Then draw the mango image below the number
+                        // Luego dibuja la imagen del mango debajo del número
                         drawPlayer();
                     }
-                    // Start the countdown
+                    // Inicia el contador
                     function countdownLoop() {
                         drawCountdown();
                         if (countdown > 0) {
@@ -678,7 +681,7 @@
                             const percent = Math.min(score / winScore, 1) * 100;
                             fill.style.width = percent + '%';
                         }
-                        // Mark the start points of each wave
+                        // Marcar los puntos de inicio de cada oleada
                         let markers = document.getElementById('progress-bar-markers');
                         if (!markers) {
                             markers = document.createElement('div');
@@ -712,7 +715,7 @@
                                 marker.style.right = '0px';
                                 marker.innerHTML = '';
                             } else if (i === 2) {
-                                // Wave 3 uses iga.png
+                                // Oleada 3 usa iga.png
                                 let leftPercent = percent;
                                 if (leftPercent < 6) leftPercent = 6;
                                 if (leftPercent > 94) leftPercent = 94;
@@ -732,12 +735,12 @@
                         if (gameOver) return;
                         ctx.clearRect(0, 0, canvas.width, canvas.height);
                         drawPlayer();
-                        // Removed the progress bar and score
+                        // Eliminada la barra de progreso y score
                         for (let i = bullets.length - 1; i >= 0; i--) {
                             const b = bullets[i];
                             b.x += b.dx * b.speed;
                             b.y += b.dy * b.speed;
-                            // Draw the mango image as a bullet
+                            // Dibuja la imagen del mango como bala
                             const bulletImg = new Image();
                             bulletImg.src = b.img;
                             const bulletSize = 24;
@@ -751,19 +754,19 @@
                                 bullets.splice(i, 1);
                             }
                         }
-                        if (!gameStarted) return; // Don't draw or move iguanas until the countdown is over
+                        if (!gameStarted) return; // No dibujar ni mover iguanas hasta que termine el contador
                         for (let i = enemies.length - 1; i >= 0; i--) {
                             const e = enemies[i];
                             if (!e.hit) {
                                 e.x += e.dx * e.speed;
                                 e.y += e.dy * e.speed;
                             } else {
-                                // All retreat to 15% less than the original yellow
+                                // Todos retroceden a 15% menos que el amarillo original
                                 const retroSpeed = e.baseSpeed * 0.85;
                                 e.x -= e.dx * retroSpeed;
                                 e.y -= e.dy * retroSpeed;
                             }
-                            // Select the image based on color or if hit
+                            // Selecciona la imagen según el color o si está golpeado
                             let imgSrc = '';
                             if (e.hit) {
                                 imgSrc = 'iguana verde.png';
@@ -777,7 +780,7 @@
                             if (imgSrc) {
                                 const enemyImg = new Image();
                                 enemyImg.src = imgSrc;
-                                const renderSize = Math.round(e.size * 1.0); // ensures 100% bigger
+                                const renderSize = Math.round(e.size * 1.0); // asegura 100% más grande
                                 enemyImg.onload = function() {
                                     ctx.drawImage(enemyImg, e.x, e.y, renderSize, renderSize);
                                 };
@@ -817,18 +820,18 @@
                                 }
                             }
                         }
-                        // If no active enemies or about to spawn, go to the next wave
+                        // Si no quedan enemigos activos ni por salir, pasa a la siguiente oleada
                         if (enemies.length === 0 && enemiesToSpawn.length === 0 && !gameOver && currentWave < waves.length - 1) {
                             nextWave();
                         }
                         requestAnimationFrame(updateGame);
                     }
-                    // Shooting events only when gameStarted is true
+                    // Eventos de disparo solo cuando gameStarted es true
                     let lastTouchTime = 0;
                     canvas.addEventListener('touchstart', e => {
                         if (!gameStarted) return;
                         const now = Date.now();
-                        if (now - lastTouchTime < 200) return; // Prevent multiple rapid shots
+                        if (now - lastTouchTime < 200) return; // Evita múltiples disparos rápidos
                         lastTouchTime = now;
                         const touch = e.touches[0];
                         shootBullet(touch.clientX, touch.clientY);
@@ -837,7 +840,7 @@
                         if (!gameStarted) return;
                         shootBullet(e.clientX, e.clientY);
                     });
-                    // Start music
+                    // Inicia la música
                     const audio = document.getElementById('pong-audio');
                     if (audio) {
                         audio.currentTime = 0;
@@ -847,7 +850,7 @@
                             audio.play().catch(()=>{});
                         });
                     }
-                    // Do not call updateGame() here, the countdown does it
+                    // No llamar updateGame() aquí, lo hace el contador
                 }, 10);
             }
         });
